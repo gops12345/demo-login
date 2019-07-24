@@ -1,0 +1,14 @@
+.formBack{
+    width: 25%;
+    height: 100%;
+    background-color: burlywood;
+    margin: auto;
+    padding: 5px;
+}
+
+.formTop{
+    width: 100%;
+    padding: 5px;
+    height: 40%;
+    background-color: rebeccapurple;
+}
