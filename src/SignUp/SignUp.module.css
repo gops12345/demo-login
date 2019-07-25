@@ -1,7 +1,9 @@
 .input{
-    padding: 2px;
-    margin-right: 5px;
+    width: 90%;
+    margin-bottom: 5px;
+    padding: 5px;
 }
+
 .button{
     background-color: brown;
     border: none;
