@@ -11,7 +11,8 @@ class Login extends Component {
       userName: "",
       password: ""
     },
-    loginAllowed : false
+    loginAllowed : false,
+    checkData: null
   };
 
   //Gettting UserName for validation
@@ -40,21 +41,34 @@ class Login extends Component {
   };
 
   componentDidMount () {
-      axios.get('https://fir-login-c2e2d.firebaseio.com/Users.json')
-      .then(response => {
-          console.log(response.data);
-        //   if(this.state.users === response.data.users){
-        //       this.setState({
-        //           loginAllowed: true
-        //       })
-        //   }
+     const users = axios.get('https://fir-login-c2e2d.firebaseio.com/Users.json')
+     .then(response => {
+       
+        const data = response.data;
+        const checkDta = data.map(dta => {
+          return {
+            ...Array[dta]
+          }
+        })
 
-      })
+        this.setState({
+          checkData : checkDta
+        })
+     }).catch(error => console.log(error));
+      console.log(this.state.checkData)
+    
   }
 
   login = () => {
-      if(this.state.loginAllowed){
-          alert('logged In the System');
+  
+     this.state.loginAllowed = this.state.checkData.reduce((value, users) =>{
+        if(this.state.users === users)
+         value = true;
+         return value;
+      })
+
+      if(this.state.loginAllowed ){
+        alert('login !!!!!!!');
       }
   }
 
