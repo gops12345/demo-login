@@ -8,11 +8,12 @@ class Login extends Component {
   // Defining a variable with userName and Password
   state = {
     users: {
-      userName: "",
-      password: ""
+      password: "",
+      userName: ""
     },
     loginAllowed : false,
-    checkData: null
+    checkData: null,
+    databaseUsers : []
   };
 
   //Gettting UserName for validation
@@ -40,36 +41,61 @@ class Login extends Component {
     });
   };
 
-  componentDidMount () {
+  componentDidUpdate() {
+   
      const users = axios.get('https://fir-login-c2e2d.firebaseio.com/Users.json')
      .then(response => {
        
-        const data = response.data;
-        const checkDta = data.map(dta => {
-          return {
-            ...Array[dta]
-          }
-        })
-
+        let data = [];  
+       // console.log(response.data);
+        for(let key in response.data){
+          data.push(response.data[key]);
+        }
+         
+        if(this.databaseUsers != data){
         this.setState({
-          checkData : checkDta
+          databaseUsers : data
         })
-     }).catch(error => console.log(error));
-      console.log(this.state.checkData)
+      }
+    //     const checkDta = data.map(dta => {
+    //       return {
+    //         ...Array[dta]
+    //       }
+    //     })
+
+    //     this.setState({
+    //       checkData : checkDta
+    //     })
+    //  }).catch(error => console.log(error));
+    //   console.log(this.state.checkData)
+     })
+    
+  
     
   }
 
   login = () => {
-  
-     this.state.loginAllowed = this.state.checkData.reduce((value, users) =>{
-        if(this.state.users === users)
-         value = true;
-         return value;
-      })
+     console.log(this.state.databaseUsers);
+     
+     let allowed = 1;
+     for(let key in this.state.databaseUsers){
+   
+     console.log(this.state.databaseUsers[key].user.userName);
+     console.log(this.state.users.userName);
+     console.log(this.state.databaseUsers[key].user.password);
+     console.log(this.state.users.password);
+       if((this.state.users.userName == this.state.databaseUsers[key].user.userName) && (this.state.users.password == this.state.databaseUsers[key].user.password)){
+        alert("Login succesful")
+        
+        allowed = 0;
+       }
+       
+     }
 
-      if(this.state.loginAllowed ){
-        alert('login !!!!!!!');
-      }
+     if(allowed != 0){
+      alert("Incorret username and password");
+     }
+  
   }
 
   render() {
@@ -79,7 +105,7 @@ class Login extends Component {
         <FormBack>
           <input type="text" placeholder="UserName" className={styles.input}  onChange = {this.getUserName} />
           <input
-            type="password"
+            type="text"
             placeholder="Password"
             className={styles.input}
             onChange = {this.getPassword}
